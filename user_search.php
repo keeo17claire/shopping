@@ -1,8 +1,10 @@
-<?php
-//initialize the session
-if (!isset($_SESSION)) {
-  session_start();
-}
+<?php  
+
+require_once('Connections/iyouwethey_connect.php');
+
+session_start();
+
+$row_Rec_user = array('role' => '', 'FirstName' => '', 'LastName' => ''); // Initialize the variable
 
 // ** Logout the current user. **
 $logoutAction = $_SERVER['PHP_SELF']."?doLogout=true";
@@ -33,7 +35,32 @@ if (!isset($_SESSION)) {
 $MM_authorizedUsers = "";
 $MM_donotCheckaccess = "true";
 
-// *** Restrict Access To Page: Grant or deny access to this page
+if(isset($_SESSION['MM_Username'])) {
+  $username = $_SESSION['MM_Username'];
+  $query_Rec_user = "SELECT * FROM your_user_table WHERE user_column = '$username'";
+  
+  // Check if $iyouwethey_connect is a valid mysqli object
+  if ($iyouwethey_connect instanceof mysqli) {
+    $Rec_user = mysqli_query($iyouwethey_connect, $query_Rec_user);
+
+    if ($Rec_user) {
+      $row_Rec_user = mysqli_fetch_assoc($Rec_user);
+      if (!$row_Rec_user) {
+        echo 'No user found';
+        // Handle the case where no user was found
+      }
+    } else {
+      echo 'Query failed: ' . mysqli_error($iyouwethey_connect);
+      // Handle the query failure
+    }
+  } else {
+    echo 'Invalid database connection';
+    // Handle the invalid database connection
+  }
+} else {
+  echo 'Session variable MM_Username is not set';
+  // Handle the case where the session variable is not set
+}
 function isAuthorized($strUsers, $strGroups, $UserName, $UserGroup) { 
   // For security, start by assuming the visitor is NOT authorized. 
   $isValid = False; 
