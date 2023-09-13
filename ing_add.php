@@ -201,6 +201,27 @@ if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form1")) {
   header(sprintf("Location: %s", $updateGoTo));
 }
 
+if ((isset($_POST["MM_update"])) && ($_POST["MM_update"] == "form2")) {
+  $updateSQL = sprintf("UPDATE ingredient SET Ing_TypeID=%s, IngtName=%s, Price=%s, Amount=%s, Unit=%s, PurchasePoint=%s WHERE IngID=%s",
+                       GetSQLValueString($_POST['Ing_TypeID'], "int"),
+                       GetSQLValueString($_POST['IngtName'], "text"),
+                       GetSQLValueString($_POST['Price'], "double"),
+                       GetSQLValueString($_POST['Amount'], "int"),
+                       GetSQLValueString($_POST['Unit'], "text"),
+                       GetSQLValueString($_POST['PurchasePoint'], "int"),
+                       GetSQLValueString($_POST['IngID'], "int"));
+
+  mysql_select_db($database_iyouwethey_connect, $iyouwethey_connect);
+  $Result1 = mysql_query($updateSQL, $iyouwethey_connect) or die(mysql_error());
+
+  $updateGoTo = "result.php";
+  if (isset($_SERVER['QUERY_STRING'])) {
+    $updateGoTo .= (strpos($updateGoTo, '?')) ? "&" : "?";
+    $updateGoTo .= $_SERVER['QUERY_STRING'];
+  }
+  header(sprintf("Location: %s", $updateGoTo));
+}
+
 $colname_Rec_ing_add = "-1";
 if (isset($_GET['iid'])) {
   $colname_Rec_ing_add = $_GET['iid'];
@@ -307,21 +328,6 @@ $totalRows_Rec_add = mysql_num_rows($Rec_add);
     </table></td>
     </tr>
   </table>
-<p>&nbsp;</p>
-<form action="<?php echo $editFormAction; ?>" method="post" name="form1" id="form1">
-  <table align="center">
-    <tr valign="baseline">
-      <td nowrap="nowrap" align="right">Amount:</td>
-      <td><input type="text" name="Amount" value="<?php echo htmlentities($row_Rec_ing_add['Amount'], ENT_COMPAT, 'utf-8'); ?>" size="32" /></td>
-    </tr>
-    <tr valign="baseline">
-      <td nowrap="nowrap" align="right">&nbsp;</td>
-      <td><input type="submit" value="Update record" /></td>
-    </tr>
-  </table>
-  <input type="hidden" name="MM_update" value="form1" />
-  <input type="hidden" name="IngID" value="<?php echo $row_Rec_ing_add['IngID']; ?>" />
-</form>
 <p>&nbsp;</p>
 </body>
 </html>

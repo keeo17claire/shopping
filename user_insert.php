@@ -107,16 +107,6 @@ function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDe
 $editFormAction = $_SERVER['PHP_SELF'];
 if (isset($_SERVER['QUERY_STRING'])) {
   $editFormAction .= "?" . htmlentities($_SERVER['QUERY_STRING']);
-}
-
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
-  $insertSQL = sprintf("INSERT INTO `user` (UserID, Password, UserName, Status, FirstName, LastName) VALUES (%s, %s, %s, %s, %s, %s)",
-                       GetSQLValueString($_POST['UserID'], "int"),
-                       GetSQLValueString($_POST['Password'], "text"),
-                       GetSQLValueString($_POST['UserName'], "text"),
-                       GetSQLValueString($_POST['Status'], "text"),
-                       GetSQLValueString($_POST['FirstName'], "text"),
-                       GetSQLValueString($_POST['LastName'], "text"));
 
   mysql_select_db($database_iyouwethey_connect, $iyouwethey_connect);
   $Result1 = mysql_query($insertSQL, $iyouwethey_connect) or die(mysql_error());
@@ -129,7 +119,7 @@ if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
   header(sprintf("Location: %s", $insertGoTo));
 }
 
-if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form2")) {
+if ((isset($_POST["MM_insert"])) && ($_POST["MM_insert"] == "form1")) {
   $insertSQL = sprintf("INSERT INTO `user` (UserID, username, Password, Status, FirstName, LastName, `role`) VALUES (%s, %s, %s, %s, %s, %s, %s)",
                        GetSQLValueString($_POST['UserID'], "int"),
                        GetSQLValueString($_POST['username'], "text"),
@@ -155,7 +145,7 @@ if (isset($_SESSION['MM_Username'])) {
   $colname_Rec_user = $_SESSION['MM_Username'];
 }
 mysql_select_db($database_iyouwethey_connect, $iyouwethey_connect);
-$query_Rec_user = sprintf("SELECT Status, FirstName, LastName FROM `user` WHERE username = %s", GetSQLValueString($colname_Rec_user, "text"));
+$query_Rec_user = sprintf("SELECT FirstName, LastName, `role` FROM `user` WHERE username = %s", GetSQLValueString($colname_Rec_user, "text"));
 $Rec_user = mysql_query($query_Rec_user, $iyouwethey_connect) or die(mysql_error());
 $row_Rec_user = mysql_fetch_assoc($Rec_user);
 $totalRows_Rec_user = mysql_num_rows($Rec_user);
@@ -164,67 +154,31 @@ $totalRows_Rec_user = mysql_num_rows($Rec_user);
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>Untitled Document</title>
-<style>
-.accordion {
-  background-color: #eee;
-  color: #444;
-  cursor: pointer;
-  padding: 18px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 15px;
-  transition: 0.4s;
-  text-align:center;
-}
-
-.active, .accordion:hover {
-  background-color: #ccc;
-}
-
-.accordion:after {
-  content: '\002B';
-  color: #777;
-  font-weight: bold;
-  float: right;
-  margin-left: 5px;
-  
-}
-
-.active:after {
-  content: "\2212";
-}
-
-.panel {
-  padding: 0 18px;
-  background-color: white;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
-  
-}
-.TH {
-	font-family: "TH Sarabun New";
-	font-size: 24px;
-}
-
-.head_color {
-	color: #28324D;
-	font-family: Kanit;
-	font-size: 24px;
-}
-.head_color {
-	font-size: 16px;
-}
-.headddd {
-	font-size: 24px;
-	font-family: Kanit;
+<title>ระบบคลังสินค้า I YOU WE THEY</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@500&family=Prompt&display=swap" rel="stylesheet">
+  <style type="text/css">
+		body{
+    font-family: 'Kanit', sans-serif;
+  }
+	.TH .head_color .headddd {
 	color: #28324D;
 }
-</style>
-</head>
+  .head_color p {
+	color: #28324D;
+}
+  .TH .head_color .headddd {
+	font-size: 24px;
+}
+  .TH .head_color .headddd {
+	font-size: 18px;
+}
+  .TH .head_color .headddd {
+	font-size: 24px;
+}
+  </style>
+  </head>
 
 <body>
 <table width="100%" height="100" border="0" align="center" cellpadding="0" cellspacing="0" >
@@ -233,7 +187,7 @@ $totalRows_Rec_user = mysql_num_rows($Rec_user);
       <td width="1156" height="100" align="left" valign="top" bgcolor="#FFFFFF"><h6><span class="TH"> <span class="head_color"> <span class="headddd">ระบบคลังสินค้า <br>
       </span></span></span><span class="TH"><span class="head_color"><span class="headddd">I YOU WE THEY</span></span></span></h6></td>
       <td width="578" align="right" valign="middle" bgcolor="#FFFFFF" class="head_color"><p>&nbsp;&nbsp;</p>
-        <p><img src="image/user (2).png" alt="รูป2" width="30" height="30" align="absbottom" /><?php echo $row_Rec_user['Status']; ?>: <?php echo $row_Rec_user['FirstName']; ?><?php echo $row_Rec_user['LastName']; ?><a href="<?php echo $logoutAction ?>"><img src="image/logout.png" width="30" height="30" align="absbottom"></a></p></td> 
+        <p><img src="image/user (2).png" alt="รูป2" width="30" height="30" align="absbottom" /><?php echo $row_Rec_user['role']; ?>: <?php echo $row_Rec_user['FirstName']; ?><?php echo $row_Rec_user['LastName']; ?><a href="<?php echo $logoutAction ?>"><img src="image/logout.png" width="30" height="30" align="absbottom"></a></p></td> 
   </tr>
 </table></td>
     </tr>
@@ -247,7 +201,7 @@ $totalRows_Rec_user = mysql_num_rows($Rec_user);
       <table align="center">
         <tr valign="baseline">
           <td width="96" align="right" nowrap="nowrap">Username:</td>
-          <td width="269"><input type="text" name="username" value="" size="32" />
+          <td width="414"><input type="text" name="username" value="" size="32" />
             *</td>
         </tr>
         <tr valign="baseline">
@@ -268,7 +222,7 @@ $totalRows_Rec_user = mysql_num_rows($Rec_user);
         <tr valign="baseline">
           <td nowrap="nowrap" align="right">สถานะ:</td>
           <td><input type="text" name="role" value="" size="32" /> 
-            user / owner</td>
+            *user / owner เท่านั้น</td>
         </tr>
         <tr valign="baseline">
           <td nowrap="nowrap" align="right">&nbsp;</td>
