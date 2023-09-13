@@ -1,4 +1,3 @@
-<?php require_once('Connections/iyouwethey_connect.php'); ?>
 <?php
 session_start();
 require_once('Connections/iyouwethey_connect.php');
@@ -20,7 +19,7 @@ if (isset($_POST['txtusername'])) {
         $loginStrGroup = $row_LoginRS['role'];
         $uid = $row_LoginRS["UserID"];
 
-        $_SESSION['uid'] = $uid;
+        $_SESSION['UserID'] = $uid;
         $_SESSION['MM_Username'] = $loginUsername;
         $_SESSION['MM_UserGroup'] = $loginStrGroup;
 

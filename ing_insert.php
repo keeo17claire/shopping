@@ -1,4 +1,4 @@
-<?php require_once('Connections/iyouwethey_connect.php'); ?>
+<?php session_start(); require_once('Connections/iyouwethey_connect.php'); ?>
 <?php
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 

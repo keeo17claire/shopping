@@ -1,4 +1,4 @@
-<?php require_once('Connections/iyouwethey_connect.php'); ?>
+<?php session_start(); require_once('Connections/iyouwethey_connect.php'); ?>
 <?php
 //initialize the session
 if (!isset($_SESSION)) {

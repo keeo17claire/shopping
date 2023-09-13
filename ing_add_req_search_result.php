@@ -1,4 +1,5 @@
-<?php require_once('Connections/iyouwethey_connect.php'); ?>
+<?php session_start();
+require_once('Connections/iyouwethey_connect.php'); ?>
 <?php
 if (!function_exists("GetSQLValueString")) {
 function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
@@ -152,7 +153,8 @@ $totalRows_Rec_user = mysql_num_rows($Rec_user);
           <td width="121" align="right"><strong>หน่วย</strong></td>
           <td width="131" align="right">&nbsp;</td>
         </tr>
-        <?php do { ?>
+        <?php $startRow_Rec_int = 0;
+        do { ?>
         <tr>
           <td align="center"><?php echo ($startRow_Rec_int + 1) ?>.</td>
           <td align="center"><?php echo $row_Rec_int['IngtName']; ?></td>
