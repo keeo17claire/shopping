@@ -47,10 +47,31 @@ $totalRows_requisition_ingredient = mysql_num_rows($requisition_ingredient);
 
 if ($totalRows_requisition_ingredient > 0) {
 
-  $deleteSQL = sprintf("DELETE FROM ingredient WHERE IngID=%s", $IngID);
+  // Start a transaction to ensure data integrity
+  mysql_query("START TRANSACTION", $iyouwethey_connect);
 
-  mysql_select_db($database_iyouwethey_connect, $iyouwethey_connect);
-  $Result1 = mysql_query($deleteSQL, $iyouwethey_connect) or die(mysql_error());
+  // Delete references from the added_ingredient table
+  $deleteAddedIngredientSQL = sprintf("DELETE FROM added_ingredient WHERE IngID=%s", $IngID);
+  $resultAddedIngredient = mysql_query($deleteAddedIngredientSQL, $iyouwethey_connect);
+
+  if (!$resultAddedIngredient) {
+    // If an error occurred, rollback the transaction and show an error message
+    mysql_query("ROLLBACK", $iyouwethey_connect);
+    die("Error deleting from added_ingredient: " . mysql_error());
+  }
+
+  // Delete the ingredient from the ingredient table
+  $deleteIngredientSQL = sprintf("DELETE FROM ingredient WHERE IngID=%s", $IngID);
+  $resultIngredient = mysql_query($deleteIngredientSQL, $iyouwethey_connect);
+
+  if (!$resultIngredient) {
+    // If an error occurred, rollback the transaction and show an error message
+    mysql_query("ROLLBACK", $iyouwethey_connect);
+    die("Error deleting from ingredient: " . mysql_error());
+  }
+
+  // If both deletions were successful, commit the transaction
+  mysql_query("COMMIT", $iyouwethey_connect);
 
   $deleteGoTo = "result.php";
   if (isset($_SERVER['QUERY_STRING'])) {
