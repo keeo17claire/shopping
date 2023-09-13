@@ -34,31 +34,36 @@ if (!function_exists("GetSQLValueString")) {
 
 $searchQuery = isset($_GET['txtsearch']) ? $_GET['txtsearch'] : '';
 
+// Create a connection
 $conn = new mysqli($hostname_iyouwethey_connect, $username_iyouwethey_connect, $password_iyouwethey_connect, $database_iyouwethey_connect);
 
+// Set the charset to UTF-8
 $conn->set_charset("utf8");
 
+// Check connection
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT 
-           *
-        FROM requisition_ingredient 
-        JOIN user ON requisition_ingredient.UserID = user.UserID 
-        JOIN ingredient ON requisition_ingredient.IngID = ingredient.IngID 
-        WHERE ingredient.IngtName LIKE ? OR requisition_ingredient.IngID LIKE ?";
+// Prepare the SQL statement
+$sql = "SELECT IngID, IngtName, Amount FROM ingredient WHERE IngID LIKE ? OR IngtName LIKE ?";
 
+// Prepare the statement
 $stmt = $conn->prepare($sql);
 
+// Bind parameters
 $searchWildcard = "%" . $searchQuery . "%";
 $stmt->bind_param('ss', $searchWildcard, $searchWildcard);
 
+// Execute the statement
 $stmt->execute();
 
+// Get the result
 $result = $stmt->get_result();
 
+// Fetch data as associative array
 $rows = $result->fetch_all(MYSQLI_ASSOC);
+
 ?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -122,7 +127,7 @@ $rows = $result->fetch_all(MYSQLI_ASSOC);
   <table width="100%" border="0" cellspacing="5" cellpadding="10">
     <tr>
       <td align="center">
-        <h3>รายงานการเบิกจ่ายวัตถุดิบ</h3>
+        <h3>รายงานจำนวนวัตถุดิบคงเหลือทั้งหมด</h3>
       </td>
     </tr>
 
@@ -130,42 +135,25 @@ $rows = $result->fetch_all(MYSQLI_ASSOC);
       <td align="center">&nbsp;
         <table border="0" cellpadding="3" cellspacing="3">
           <tr>
-            <td>ลำดับ</td>
-            <td>รหัสการเบิก</td>
-            <td>วันที่</td>
-            <td>ชื่อ</td>
-            <td>ผู้เบิก</td>
-            <td>จำนวนการเบิก</td>
-            <td>&nbsp;</td>
+            <td>รหัสวัตถุดิบ</td>
+            <td>ชื่อวัตถุดิบ</td>
+            <td>จำนวนคงเหลือ</td>
+            <!-- <td>&nbsp;</td> -->
           </tr>
-          <?php
-          $counter = 1;
-          foreach ($rows as $row):
-            ?>
+          <?php foreach ($rows as $row): ?>
             <tr>
               <td>
-                <?php echo $counter++; ?>
-              </td>
-              <td>
-                <?php echo $row['ReqID']; ?>
-              </td>
-              <td>
-                <?php echo $row['Date']; ?>
+                <?php echo $row['IngID']; ?>
               </td>
               <td>
                 <?php echo $row['IngtName']; ?>
               </td>
               <td>
-                <?php echo $row['FirstName']; ?>
+                <?php echo $row['Amount']; ?>
               </td>
-              <td>
-                <?php echo $row['ReqAmount']; ?>
-              </td>
-              <td><a href="req_detail_report.php?id=<?php echo $row['ReqID']; ?>">รายละเอียด</a></td>
+              <!-- <td><a href="req_detail_report.php?iid=<?php echo $row['IngID']; ?>">รายละเอียด</a></td> -->
             </tr>
-          <?php
-          endforeach;
-          ?>
+          <?php endforeach; ?>
         </table>
       </td>
     </tr>

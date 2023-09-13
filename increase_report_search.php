@@ -13,7 +13,7 @@
   <table width="60%" border="0" align="center" cellpadding="5" cellspacing="5">
     <tr>
       <td colspan="2" align="center" valign="top">
-        <p>ใบเบิกวัตถุดิบ</p>
+        <p>รายงานการเติมวัตถุดิบ</p>
       </td>
     </tr>
     <tr>
@@ -21,7 +21,7 @@
         <p>ป้อนรหัสหรือชื่อวัตถุดิบ*</p>
       </td>
       <td width="46%">
-      <form id="form2" name="form1" method="get" action="req_report.php">
+      <form id="form2" name="form1" method="get" action="reportincrease_result.php">
 
           <p>
             <label for="txtsearch"></label>

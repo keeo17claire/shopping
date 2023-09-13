@@ -109,7 +109,7 @@ if (isset($_SESSION['MM_Username'])) {
   $colname_Rec_user = $_SESSION['MM_Username'];
 }
 mysql_select_db($database_iyouwethey_connect, $iyouwethey_connect);
-$query_Rec_user = sprintf("SELECT Status, FirstName, LastName FROM `user` WHERE username = %s", GetSQLValueString($colname_Rec_user, "text"));
+$query_Rec_user = sprintf("SELECT role, FirstName, LastName FROM `user` WHERE username = %s", GetSQLValueString($colname_Rec_user, "text"));
 $Rec_user = mysql_query($query_Rec_user, $iyouwethey_connect) or die(mysql_error());
 $row_Rec_user = mysql_fetch_assoc($Rec_user);
 $totalRows_Rec_user = mysql_num_rows($Rec_user);
@@ -172,7 +172,7 @@ $totalRows_Rec_user = mysql_num_rows($Rec_user);
       <td width="100" height="100" align="left" bgcolor="#FFFFFF"><h6><img src="image/logo2.png" alt="รูป1" width="143" height="143" align="absmiddle" /> <span class="heading"> <span class="head_color"> ระบบคลังสินค้า I YOU WE THEY</span></span></h6></td> 
     
             <td width="47%" height="57" align="right" valign="middle" bgcolor="#FFFFFF" class="head_color"><span class="head_color">
-      <img src="image/user (2).png" alt="รูป2" width="30" height="30" align="absmiddle" /><?php echo $row_Rec_user['Status']; ?>:<?php echo $row_Rec_user['FirstName']; ?> <?php echo $row_Rec_user['LastName']; ?> <a href="<?php echo $logoutAction ?>"><img src="image/logout.png" width="30" height="30" align="absmiddle"> Logout</a><a href="<?php echo $logoutAction ?>"></a></td> 
+      <img src="image/user (2).png" alt="รูป2" width="30" height="30" align="absmiddle" /><?php echo $row_Rec_user['role']; ?>:<?php echo $row_Rec_user['FirstName']; ?> <?php echo $row_Rec_user['LastName']; ?> <a href="<?php echo $logoutAction ?>"><img src="image/logout.png" width="30" height="30" align="absmiddle"> Logout</a><a href="<?php echo $logoutAction ?>"></a></td> 
   </tr>
 </table></td>
     </tr>
@@ -181,10 +181,10 @@ $totalRows_Rec_user = mysql_num_rows($Rec_user);
 <h2><center>เมนู</center></h2>
 <button class="accordion"><img src="image/loupe (1).png" width="40" height="40" align="absmiddle">ออกรายงาน</button>
 <div class="panel">
-  <a href="req_reportday_search.php" formmethod="post"><button class="accordion">รายงานการเบิกวัตถุดิบประจำวัน</button></a>
-  <a href="req_reportmonth_search.php" formmethod="post"><button class="accordion">รายงานการเบิกวัตถุดิบประจำเดือน</button></a>
-  <a href="ing_amount_search.php" formmethod="post"><button class="accordion">รายงานวัตถุดิบคงเหลือ</button></a>
-   <a href="ing_amount_search.php" formmethod="post"><button class="accordion">รายงานการเติมวัตถุดิบ</button></a>
+  <a href="reportday.php" formmethod="post"><button class="accordion">รายงานการเบิกวัตถุดิบประจำวัน</button></a>
+  <a href="reportmonth.php" formmethod="post"><button class="accordion">รายงานการเบิกวัตถุดิบประจำเดือน</button></a>
+  <a href="amount_report_search.php" formmethod="post"><button class="accordion">รายงานวัตถุดิบคงเหลือ</button></a>
+   <a href="increase_report_search.php" formmethod="post"><button class="accordion">รายงานการเติมวัตถุดิบ</button></a>
   <a href="req_report_search.php" formmethod="post"><button class="accordion">ใบเบิกวัตถุดิบ</button></a>
 </div>
 

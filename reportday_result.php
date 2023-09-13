@@ -1,6 +1,5 @@
+<?php require_once('Connections/iyouwethey_connect.php'); ?>
 <?php
-require_once('Connections/iyouwethey_connect.php');
-
 if (!function_exists("GetSQLValueString")) {
   function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "")
   {
@@ -31,34 +30,14 @@ if (!function_exists("GetSQLValueString")) {
     return $theValue;
   }
 }
+$date = isset($_POST['textday']) ? GetSQLValueString($_POST['textday'], "date") : GetSQLValueString(date('Y-m-d'), "date");
 
-$searchQuery = isset($_GET['txtsearch']) ? $_GET['txtsearch'] : '';
+$query_rec_req = sprintf("SELECT requisition_ingredient.ReqID, requisition_ingredient.Date, ingredient.IngtName, user.username, requisition_ingredient.ReqAmount FROM requisition_ingredient JOIN ingredient ON requisition_ingredient.IngID = ingredient.IngID JOIN user ON requisition_ingredient.UserID = user.UserID WHERE DATE(requisition_ingredient.Date) = %s", $date);
 
-$conn = new mysqli($hostname_iyouwethey_connect, $username_iyouwethey_connect, $password_iyouwethey_connect, $database_iyouwethey_connect);
+$rec_req = mysql_query($query_rec_req, $iyouwethey_connect) or die(mysql_error());
+$row_rec_req = mysql_fetch_assoc($rec_req);
+$totalRows_rec_req = mysql_num_rows($rec_req);
 
-$conn->set_charset("utf8");
-
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-
-$sql = "SELECT 
-           *
-        FROM requisition_ingredient 
-        JOIN user ON requisition_ingredient.UserID = user.UserID 
-        JOIN ingredient ON requisition_ingredient.IngID = ingredient.IngID 
-        WHERE ingredient.IngtName LIKE ? OR requisition_ingredient.IngID LIKE ?";
-
-$stmt = $conn->prepare($sql);
-
-$searchWildcard = "%" . $searchQuery . "%";
-$stmt->bind_param('ss', $searchWildcard, $searchWildcard);
-
-$stmt->execute();
-
-$result = $stmt->get_result();
-
-$rows = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 <!DOCTYPE html
   PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -122,7 +101,7 @@ $rows = $result->fetch_all(MYSQLI_ASSOC);
   <table width="100%" border="0" cellspacing="5" cellpadding="10">
     <tr>
       <td align="center">
-        <h3>รายงานการเบิกจ่ายวัตถุดิบ</h3>
+        <h3>รายงานการเบิกวัตถุดิบประจำวัน</h3>
       </td>
     </tr>
 
@@ -130,42 +109,33 @@ $rows = $result->fetch_all(MYSQLI_ASSOC);
       <td align="center">&nbsp;
         <table border="0" cellpadding="3" cellspacing="3">
           <tr>
-            <td>ลำดับ</td>
             <td>รหัสการเบิก</td>
-            <td>วันที่</td>
-            <td>ชื่อ</td>
+            <td>วันที่เบิก</td>
+            <td>ชื่อวัตถุดิบ</td>
             <td>ผู้เบิก</td>
-            <td>จำนวนการเบิก</td>
-            <td>&nbsp;</td>
+            <td>จำนวนที่เบิก</td>
+            
           </tr>
-          <?php
-          $counter = 1;
-          foreach ($rows as $row):
-            ?>
+          <?php do { ?>
             <tr>
               <td>
-                <?php echo $counter++; ?>
+                <?php echo $row_rec_req['ReqID']; ?>
               </td>
               <td>
-                <?php echo $row['ReqID']; ?>
+                <?php echo $row_rec_req['Date']; ?>
               </td>
               <td>
-                <?php echo $row['Date']; ?>
+                <?php echo $row_rec_req['IngtName']; ?>
               </td>
               <td>
-                <?php echo $row['IngtName']; ?>
+                <?php echo $row_rec_req['username']; ?>
               </td>
               <td>
-                <?php echo $row['FirstName']; ?>
+                <?php echo $row_rec_req['ReqAmount']; ?>
               </td>
-              <td>
-                <?php echo $row['ReqAmount']; ?>
-              </td>
-              <td><a href="req_detail_report.php?id=<?php echo $row['ReqID']; ?>">รายละเอียด</a></td>
+              
             </tr>
-          <?php
-          endforeach;
-          ?>
+          <?php } while ($row_rec_req = mysql_fetch_assoc($rec_req)); ?>
         </table>
       </td>
     </tr>
@@ -174,5 +144,5 @@ $rows = $result->fetch_all(MYSQLI_ASSOC);
 
 </html>
 <?php
-mysqli_free_result($result);
+mysql_free_result($rec_req);
 ?>
