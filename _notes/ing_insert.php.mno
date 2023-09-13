@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_Recordset1" value="name:IngID;datatype:int,name:Ing_TypeID;datatype:int,name:IngtName;datatype:string,name:Price;datatype:real,name:Amount;datatype:int,name:Unit;datatype:string,name:PurchasePoint;datatype:int" />
+	<infoitem key="UD_Rec_ingtypename" value="name:Ing_TypeName;datatype:string" />
+	<infoitem key="UD_Rec_ingtn" value="name:Ing_TypeID;datatype:int,name:Ing_TypeName;datatype:string" />
+	<infoitem key="UD_Rec_user" value="name:Status;datatype:string,name:FirstName;datatype:string,name:LastName;datatype:string" />
+</info>

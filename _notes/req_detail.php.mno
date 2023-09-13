@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_Rec_req" value="name:UserID;datatype:int,name:ReqID;datatype:int,name:IngID;datatype:int,name:Date;datatype:timestamp,name:ReqAmount;datatype:int" />
+	<infoitem key="UD_Rec_req_detail" value="name:ReqID;datatype:int,name:Date;datatype:timestamp,name:IngtName;datatype:string,name:username;datatype:string,name:ReqAmount;datatype:int,name:Unit;datatype:string" />
+</info>

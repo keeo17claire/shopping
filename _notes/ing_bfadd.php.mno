@@ -1,0 +1,4 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<info>
+	<infoitem key="UD_Rec_ing" value="name:IngID;datatype:int,name:Ing_TypeID;datatype:int,name:IngtName;datatype:string,name:Price;datatype:real,name:Amount;datatype:int,name:Unit;datatype:string,name:PurchasePoint;datatype:int" />
+</info>
