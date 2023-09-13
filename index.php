@@ -1,69 +1,40 @@
 <?php require_once('Connections/iyouwethey_connect.php'); ?>
 <?php
-if (!function_exists("GetSQLValueString")) {
-function GetSQLValueString($theValue, $theType, $theDefinedValue = "", $theNotDefinedValue = "") 
-{
-  if (PHP_VERSION < 6) {
-    $theValue = get_magic_quotes_gpc() ? stripslashes($theValue) : $theValue;
-  }
+session_start();
+require_once('Connections/iyouwethey_connect.php');
 
-  $theValue = function_exists("mysql_real_escape_string") ? mysql_real_escape_string($theValue) : mysql_escape_string($theValue);
+$MM_redirectLoginFailed = "login_failed.php"; // Replace with your actual login failed page
+$loginFormAction = $_SERVER['PHP_SELF'];
 
-  switch ($theType) {
-    case "text":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;    
-    case "long":
-    case "int":
-      $theValue = ($theValue != "") ? intval($theValue) : "NULL";
-      break;
-    case "double":
-      $theValue = ($theValue != "") ? doubleval($theValue) : "NULL";
-      break;
-    case "date":
-      $theValue = ($theValue != "") ? "'" . $theValue . "'" : "NULL";
-      break;
-    case "defined":
-      $theValue = ($theValue != "") ? $theDefinedValue : $theNotDefinedValue;
-      break;
-  }
-  return $theValue;
-}
-}
-?>
-<?php
 if (isset($_POST['txtusername'])) {
-  $loginUsername = $_POST['txtusername'];
-  $password = $_POST['txtpw'];
-  
-  mysql_select_db($database_iyouwethey_connect, $iyouwethey_connect);
-  
-  $LoginRS__query = sprintf("SELECT username, Password, role FROM `user` WHERE username=%s AND Password=%s",
-    GetSQLValueString($loginUsername, "text"), GetSQLValueString($password, "text")); 
-  
-  $LoginRS = mysql_query($LoginRS__query, $iyouwethey_connect) or die(mysql_error());
-  
-  if ($row_LoginRS = mysql_fetch_assoc($LoginRS)) {
-    $loginStrGroup = $row_LoginRS['role']; // รับค่าบทบาทจากฐานข้อมูล
-    $uid = $row_LoginRS ["UserID"];
-	
-    session_start();
-	$_SESSION['uid'] = $uid;
-    $_SESSION['MM_Username'] = $loginUsername;
-    $_SESSION['MM_UserGroup'] = $loginStrGroup;
+    $loginUsername = mysql_real_escape_string($_POST['txtusername']);
+    $password = mysql_real_escape_string($_POST['txtpw']);
 
-    if ($loginStrGroup == "owner") {
-      $MM_redirectLoginSuccess = "owner_home.php"; // หน้าแอดมิน
-    } elseif ($loginStrGroup == "staff") {
-      $MM_redirectLoginSuccess = "staff_home.php"; // หน้าผู้ใช้ทั่วไป
+    mysql_select_db($database_iyouwethey_connect, $iyouwethey_connect);
+
+    $LoginRS__query = sprintf("SELECT username, Password, role, UserID FROM `user` WHERE username='%s' AND Password='%s'", $loginUsername, $password);
+
+    $LoginRS = mysql_query($LoginRS__query, $iyouwethey_connect) or die(mysql_error());
+
+    if ($row_LoginRS = mysql_fetch_assoc($LoginRS)) {
+        $loginStrGroup = $row_LoginRS['role'];
+        $uid = $row_LoginRS["UserID"];
+
+        $_SESSION['uid'] = $uid;
+        $_SESSION['MM_Username'] = $loginUsername;
+        $_SESSION['MM_UserGroup'] = $loginStrGroup;
+
+        if ($loginStrGroup == "owner") {
+            $MM_redirectLoginSuccess = "owner_home.php";
+        } elseif ($loginStrGroup == "staff") {
+            $MM_redirectLoginSuccess = "staff_home.php";
+        }
+
+        header("Location: " . $MM_redirectLoginSuccess);
+    } else {
+        header("Location: " . $MM_redirectLoginFailed);
     }
-
-    header("Location: " . $MM_redirectLoginSuccess );
-  } else {
-    header("Location: ". $MM_redirectLoginFailed );
-  }
 }
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">

@@ -112,7 +112,7 @@ if (isset($_SESSION['MM_Username'])) {
   $colname_Rec_user = $_SESSION['MM_Username'];
 }
 mysql_select_db($database_iyouwethey_connect, $iyouwethey_connect);
-$query_Rec_user = sprintf("SELECT Status, FirstName, LastName FROM `user` WHERE username = %s", GetSQLValueString($colname_Rec_user, "text"));
+$query_Rec_user = sprintf("SELECT role, FirstName, LastName FROM `user` WHERE username = %s", GetSQLValueString($colname_Rec_user, "text"));
 $Rec_user = mysql_query($query_Rec_user, $iyouwethey_connect) or die(mysql_error());
 $row_Rec_user = mysql_fetch_assoc($Rec_user);
 $totalRows_Rec_user = mysql_num_rows($Rec_user);
@@ -190,7 +190,7 @@ $totalRows_Rec_user = mysql_num_rows($Rec_user);
       <td width="1156" height="100" align="left" valign="top" bgcolor="#FFFFFF"><h6><span class="TH"> <span class="head_color"> <span class="headddd">ระบบคลังสินค้า <br>
       </span></span></span><span class="TH"><span class="head_color"><span class="headddd">I YOU WE THEY</span></span></span></h6></td>
       <td width="578" align="right" valign="middle" bgcolor="#FFFFFF" class="head_color"><p>&nbsp;&nbsp;</p>
-        <p><img src="image/user (2).png" alt="รูป2" width="30" height="30" align="absbottom" /><?php echo $row_Rec_user['Status']; ?>:<?php echo $row_Rec_user['FirstName']; ?> <?php echo $row_Rec_user['LastName']; ?>&nbsp; <a href="<?php echo $logoutAction ?>"><img src="image/logout.png" width="30" height="30" align="absbottom"></a></p></td> 
+        <p><img src="image/user (2).png" alt="รูป2" width="30" height="30" align="absbottom" /><?php echo $row_Rec_user['role']; ?>:<?php echo $row_Rec_user['FirstName']; ?> <?php echo $row_Rec_user['LastName']; ?>&nbsp; <a href="<?php echo $logoutAction ?>"><img src="image/logout.png" width="30" height="30" align="absbottom"></a></p></td> 
   </tr>
 </table></td>
     </tr>
